@@ -4,13 +4,13 @@ install:
 lint:
 	ruff check .
 test:
-	pytest
+	PYTHONPATH=src pytest
 train-baselines:
-	python -m churn_prediction.train_baselines
+	PYTHONPATH=src python -m churn_prediction.train_baselines
 train-mlp:
-	python -m churn_prediction.train_mlp
+	PYTHONPATH=src python -m churn_prediction.train_mlp
 mlflow:
 	mlflow ui
 run-api:
-	uvicorn churn_prediction.api:app --reload
+	PYTHONPATH=src uvicorn churn_prediction.api:app --reload
 all: lint test

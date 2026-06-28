@@ -8,3 +8,6 @@ data/raw/*.csv
 data/processed/*.csv
 models/*
 !models/.gitkeep
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!models/final_model_comparison.csv

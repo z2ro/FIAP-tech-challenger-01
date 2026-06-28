@@ -4,6 +4,7 @@ from sklearn.base import clone
 from sklearn.dummy import DummyClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import f1_score, make_scorer, precision_score, recall_score
 from sklearn.model_selection import StratifiedKFold, cross_validate
 from sklearn.pipeline import Pipeline
 
@@ -26,7 +27,14 @@ def baseline_models(seed: int = SEED) -> dict[str, object]:
 def cross_validate_baselines(x: pd.DataFrame, y: pd.Series, seed: int = SEED) -> pd.DataFrame:
     cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=seed)
     rows = []
-    scoring = ["accuracy", "precision", "recall", "f1", "roc_auc", "average_precision"]
+    scoring = {
+        "accuracy": "accuracy",
+        "precision": make_scorer(precision_score, zero_division=0),
+        "recall": make_scorer(recall_score, zero_division=0),
+        "f1": make_scorer(f1_score, zero_division=0),
+        "roc_auc": "roc_auc",
+        "average_precision": "average_precision",
+    }
     for name, model in baseline_models(seed).items():
         pipe = Pipeline([("preprocessor", build_preprocessor(x)), ("model", clone(model))])
         scores = cross_validate(pipe, x, y, cv=cv, scoring=scoring, n_jobs=-1)
