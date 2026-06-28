@@ -47,21 +47,28 @@ Métricas finais calculadas no conjunto: teste
 ```
 
 ## Comparação de modelos
-A tabela abaixo consolida os resultados disponíveis. Os baselines estão marcados como média de validação cruzada; a MLP está marcada como teste. Não compare esses números como se fossem exatamente o mesmo protocolo sem considerar a coluna `Escopo`.
+`models/baseline_comparison.csv` permanece como comparação de desenvolvimento por validação cruzada estratificada. `models/final_model_comparison.csv` é gerado por `make train-mlp` com todos os modelos avaliados no mesmo conjunto de teste.
 
-| Modelo | Escopo | Accuracy | Precision | Recall | F1 | ROC-AUC | PR-AUC |
-| ------ | ------ | -------: | --------: | -----: | -: | ------: | -----: |
-| DummyClassifier | CV média | 0.734630 | 0.000000 | 0.000000 | 0.000000 | 0.500000 | 0.265370 |
-| LogisticRegression | CV média | 0.745704 | 0.513362 | 0.801484 | 0.625824 | 0.844875 | 0.655381 |
-| RandomForestClassifier | CV média | 0.771118 | 0.560268 | 0.637214 | 0.596175 | 0.822030 | 0.600438 |
-| PyTorch MLP | Teste | 0.591296 | 0.389458 | 0.946619 | 0.551867 | 0.843192 | 0.650842 |
+### Validação cruzada dos baselines
 
-A versão CSV está em `models/final_model_comparison.csv`.
+| Modelo | Accuracy | Precision | Recall | F1 | ROC-AUC | PR-AUC |
+| ------ | -------: | --------: | -----: | -: | ------: | -----: |
+| DummyClassifier | 0.734630 | 0.000000 | 0.000000 | 0.000000 | 0.500000 | 0.265370 |
+| LogisticRegression | 0.745704 | 0.513362 | 0.801484 | 0.625824 | 0.844875 | 0.655381 |
+| RandomForestClassifier | 0.771118 | 0.560268 | 0.637214 | 0.596175 | 0.822030 | 0.600438 |
+
+### MLP no conjunto de teste
+
+| Modelo | Accuracy | Precision | Recall | F1 | ROC-AUC | PR-AUC |
+| ------ | -------: | --------: | -----: | -: | ------: | -----: |
+| PyTorch MLP | 0.591296 | 0.389458 | 0.946619 | 0.551867 | 0.843192 | 0.650842 |
+
+A comparação final equivalente deve ser lida de `models/final_model_comparison.csv` após executar `make train-mlp`, porque esse arquivo avalia DummyClassifier, LogisticRegression, RandomForestClassifier e PyTorch MLP no mesmo test set.
 
 ## Interpretação técnica
-Logistic Regression apresenta melhor equilíbrio geral nos resultados atuais: maior F1, PR-AUC ligeiramente superior e ROC-AUC semelhante/superior. Random Forest tem maior accuracy, mas menor recall de churn. A MLP com threshold `0.2` entrega recall muito alto, aproximadamente 94,66%, ao custo de menor precision e mais falsos positivos.
+A conclusão final deve usar `models/final_model_comparison.csv`, pois ele compara todos os modelos no mesmo conjunto de teste. Com as evidências já obtidas, a MLP com threshold `0.2` entrega recall muito alto, aproximadamente 94,66%, ao custo de menor precision e mais falsos positivos.
 
-A MLP é adequada quando o custo de perder um cliente em churn for muito maior que o custo de abordar um cliente que não cancelaria. Sem parâmetros reais de negócio, a escolha final deve ser tratada como decisão a validar com stakeholders.
+A MLP é adequada quando o custo de perder um cliente em churn for muito maior que o custo de abordar um cliente que não cancelaria. Sem parâmetros reais de negócio e sem a tabela final de teste regenerada neste checkout, a escolha final deve ser tratada como decisão a validar com stakeholders.
 
 ## Análise de custo
 Cenário acadêmico hipotético usado no código:

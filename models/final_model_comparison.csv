@@ -1,5 +1,1 @@
-model,evaluation_scope,accuracy,precision,recall,f1,roc_auc,pr_auc
-DummyClassifier,cross_validation_mean,0.734630,0.000000,0.000000,0.000000,0.500000,0.265370
-LogisticRegression,cross_validation_mean,0.745704,0.513362,0.801484,0.625824,0.844875,0.655381
-RandomForestClassifier,cross_validation_mean,0.771118,0.560268,0.637214,0.596175,0.822030,0.600438
-PyTorch MLP,test,0.591296,0.389458,0.946619,0.551867,0.843192,0.650842
+model,accuracy,precision,recall,f1,roc_auc,pr_auc

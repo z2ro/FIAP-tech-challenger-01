@@ -9,7 +9,8 @@ from churn_prediction.artifacts import (
     save_preprocessor,
     save_threshold,
 )
-from churn_prediction.config import DATA_PATH, MODEL_VERSION, SEED
+from churn_prediction.baselines import evaluate_baselines_on_test
+from churn_prediction.config import DATA_PATH, MODEL_VERSION, MODELS_DIR, SEED
 from churn_prediction.cost_analysis import best_threshold, threshold_cost_table
 from churn_prediction.data import (
     dataset_hash,
@@ -41,6 +42,9 @@ def main() -> None:
         threshold = best_threshold(table)
         test_prob = predict_proba(result.model, x_test_p)
         metrics = classification_metrics(y_test.to_numpy(), test_prob, threshold)
+        final_comparison = evaluate_baselines_on_test(x_train, y_train, x_test, y_test)
+        final_comparison.loc[len(final_comparison)] = {"model": "PyTorch MLP"} | metrics
+        final_comparison.to_csv(MODELS_DIR / "final_model_comparison.csv", index=False)
         mlflow.log_params(
             {
                 "architecture": "64-32",
@@ -66,6 +70,7 @@ def main() -> None:
         }
         save_metadata(metadata)
         mlflow.log_dict(metadata, "metadata.json")
+        mlflow.log_artifact(str(MODELS_DIR / "final_model_comparison.csv"), artifact_path="reports")
 
 
 if __name__ == "__main__":

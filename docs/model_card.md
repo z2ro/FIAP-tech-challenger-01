@@ -35,14 +35,17 @@ MLP com camadas `Linear(input_size, 64)`, ReLU, Dropout 0.3, `Linear(64, 32)`, R
 | PR-AUC | 0.650842 |
 
 ## Comparação com baselines
-| Modelo | Escopo | Accuracy | Precision | Recall | F1 | ROC-AUC | PR-AUC |
-| ------ | ------ | -------: | --------: | -----: | -: | ------: | -----: |
-| DummyClassifier | CV média | 0.734630 | 0.000000 | 0.000000 | 0.000000 | 0.500000 | 0.265370 |
-| LogisticRegression | CV média | 0.745704 | 0.513362 | 0.801484 | 0.625824 | 0.844875 | 0.655381 |
-| RandomForestClassifier | CV média | 0.771118 | 0.560268 | 0.637214 | 0.596175 | 0.822030 | 0.600438 |
-| PyTorch MLP | Teste | 0.591296 | 0.389458 | 0.946619 | 0.551867 | 0.843192 | 0.650842 |
+Durante o desenvolvimento, `models/baseline_comparison.csv` registra médias de validação cruzada dos baselines. A comparação final equivalente deve usar `models/final_model_comparison.csv`, gerado por `make train-mlp`, com DummyClassifier, LogisticRegression, RandomForestClassifier e PyTorch MLP avaliados no mesmo conjunto de teste.
 
-Logistic Regression apresenta melhor equilíbrio geral nos resultados atuais. A MLP prioriza cobertura de churn com recall alto, aceitando mais falsos positivos.
+### Validação cruzada dos baselines
+
+| Modelo | Accuracy | Precision | Recall | F1 | ROC-AUC | PR-AUC |
+| ------ | -------: | --------: | -----: | -: | ------: | -----: |
+| DummyClassifier | 0.734630 | 0.000000 | 0.000000 | 0.000000 | 0.500000 | 0.265370 |
+| LogisticRegression | 0.745704 | 0.513362 | 0.801484 | 0.625824 | 0.844875 | 0.655381 |
+| RandomForestClassifier | 0.771118 | 0.560268 | 0.637214 | 0.596175 | 0.822030 | 0.600438 |
+
+A conclusão sobre melhor equilíbrio deve ser revisada a partir da tabela final de teste, não das médias de validação cruzada. A MLP prioriza cobertura de churn com recall alto, aceitando mais falsos positivos.
 
 ## Falsos positivos e falsos negativos
 - Falso positivo: cliente abordado apesar de não churnar; gera custo de campanha e possível incômodo.
