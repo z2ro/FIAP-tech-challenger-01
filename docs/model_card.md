@@ -35,17 +35,20 @@ MLP com camadas `Linear(input_size, 64)`, ReLU, Dropout 0.3, `Linear(64, 32)`, R
 | PR-AUC | 0.650842 |
 
 ## Comparação com baselines
-Durante o desenvolvimento, `models/baseline_comparison.csv` registra médias de validação cruzada dos baselines. A comparação final equivalente deve usar `models/final_model_comparison.csv`, gerado por `make train-mlp`, com DummyClassifier, LogisticRegression, RandomForestClassifier e PyTorch MLP avaliados no mesmo conjunto de teste.
+Durante o desenvolvimento, `models/baseline_comparison.csv` registra médias de validação cruzada dos baselines. A comparação final abaixo usa `models/final_model_comparison.csv`, com DummyClassifier, LogisticRegression, RandomForestClassifier e PyTorch MLP avaliados no mesmo conjunto de teste.
 
-### Validação cruzada dos baselines
+### Resultados finais — mesmo conjunto de teste
 
 | Modelo | Accuracy | Precision | Recall | F1 | ROC-AUC | PR-AUC |
 | ------ | -------: | --------: | -----: | -: | ------: | -----: |
-| DummyClassifier | 0.734630 | 0.000000 | 0.000000 | 0.000000 | 0.500000 | 0.265370 |
-| LogisticRegression | 0.745704 | 0.513362 | 0.801484 | 0.625824 | 0.844875 | 0.655381 |
-| RandomForestClassifier | 0.771118 | 0.560268 | 0.637214 | 0.596175 | 0.822030 | 0.600438 |
+| DummyClassifier | 0.734153 | 0.000000 | 0.000000 | 0.000000 | 0.500000 | 0.265847 |
+| LogisticRegression | 0.747398 | 0.516509 | 0.779359 | 0.621277 | 0.844627 | 0.658615 |
+| RandomForestClassifier | 0.773888 | 0.568182 | 0.622776 | 0.594228 | 0.820746 | 0.611227 |
+| PyTorch MLP | 0.591296 | 0.389458 | 0.946619 | 0.551867 | 0.843192 | 0.650842 |
 
-A conclusão sobre melhor equilíbrio deve ser revisada a partir da tabela final de teste, não das médias de validação cruzada. A MLP prioriza cobertura de churn com recall alto, aceitando mais falsos positivos.
+Logistic Regression apresentou melhor equilíbrio geral no teste, com melhor F1, ROC-AUC e PR-AUC. Random Forest teve maior accuracy e precision. A MLP PyTorch é o modelo servido pela API por ser o modelo principal da atividade e por apresentar o maior recall. Com threshold `0.2`, ela identifica aproximadamente 94,66% dos churns, mas gera mais falsos positivos.
+
+A escolha de servir a MLP está relacionada ao objetivo acadêmico e ao alto recall; em produção, os parâmetros de custo são hipotéticos e precisam ser recalibrados com dados reais do negócio antes de decidir entre maior cobertura de churn e melhor equilíbrio geral.
 
 ## Falsos positivos e falsos negativos
 - Falso positivo: cliente abordado apesar de não churnar; gera custo de campanha e possível incômodo.
